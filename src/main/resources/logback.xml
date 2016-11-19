@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <property name="LOG_DIR"    value="./log" />
+    <property name="LOG_LEVEL"  value="DEBUG" />
+    <property name="FILENAME"   value="c4-cmkt-processor-customer" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%d{HH:mm:ss.SSS}] [%-5level] [%thread] [%logger{36}] : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${FILENAME}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- keep 30 days' worth of history capped at 2GB total size -->
+            <fileNamePattern>${LOG_DIR}/${FILENAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>[%d{HH:mm:ss.SSS}] [%-5level] [%thread] [%logger{36}] : %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="AsyncFileAppender" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FileAppender" />
+    </appender>
+
+	<logger name="com.carrefour" level="${LOG_LEVEL}" />
+
+    <root level="${LOG_LEVEL}">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="AsyncFileAppender" />
+    </root>
+
+</configuration>
